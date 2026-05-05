@@ -34,6 +34,22 @@ def make_embed(payload):
     embed.set_footer(text=f"{os.getenv('BOT_DISPLAY_NAME', 'Logger')} • logged")
     return embed
 
+@bot.event
+async def on_ready():
+    # This loads the 'commands_file.py'
+    await bot.load_extension("commands_file")
+    
+    # Syncs your slash commands so they show up in Discord
+    await bot.tree.sync()
+    
+    print(f'Logged in as {bot.user.name} and commands are loaded!')
+
+
+@bot.tree.command(name="ping", description="Test if the bot is alive")
+async def ping(interaction: discord.Interaction):
+    # For slash commands, you MUST use interaction.response.send_message
+    await interaction.response.send_message(f"Pong! Latency: {round(bot.latency * 1000)}ms")
+
 # 3. WEB SERVER (For Render and the Notify API)
 app = Flask(__name__)
 
